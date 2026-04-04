@@ -1,0 +1,50 @@
+# ─── Konfiguration ────────────────────────────────────────────────────────────
+frame_count     = 48;   # Anzahl der PNG-Frames (frame-0.png bis frame-47.png)
+ticks_per_frame = 5;    # Ticks pro Frame (~12 fps bei 60 Hz, ~8 fps bei 40 Hz)
+                        # Formel: ticks_per_frame = Bildschirm-Hz / Ziel-fps
+
+# ─── Frames laden ─────────────────────────────────────────────────────────────
+for (i = 0; i < frame_count; i++)
+  frames[i] = Image("media/frame-" + i + ".png");
+
+# ─── Hintergrund (optional: auskommentieren für transparenten Hintergrund) ────
+bg = Rectangle.new();
+bg.SetWidth(Window.GetWidth());
+bg.SetHeight(Window.GetHeight());
+
+bg_sprite = Sprite();
+bg_sprite.SetImage(Image.Scale(
+  Image.Load("media/frame-0.png"), 1, 1   # Platzhalter, wird sofort überschrieben
+));
+bg_sprite.SetZ(0);
+
+# Schwarzer Hintergrund via 1x1 skalierten Sprite
+screen_bg = Sprite();
+screen_bg.SetZ(-1);
+
+# ─── Charakter-Sprite zentriert ───────────────────────────────────────────────
+char_w = frames[0].GetWidth();
+char_h = frames[0].GetHeight();
+
+pos_x = Math.Int(Window.GetWidth()  / 2 - char_w / 2);
+pos_y = Math.Int(Window.GetHeight() / 2 - char_h / 2);
+
+sprite = Sprite(frames[0]);
+sprite.SetX(pos_x);
+sprite.SetY(pos_y);
+sprite.SetZ(10);
+
+# ─── Animations-Loop ──────────────────────────────────────────────────────────
+tick        = 0;
+frame_index = 0;
+
+fun refresh_callback() {
+  tick++;
+  if (tick >= ticks_per_frame) {
+    tick = 0;
+    frame_index = (frame_index + 1) % frame_count;
+    sprite.SetImage(frames[frame_index]);
+  }
+}
+
+Plymouth.SetRefreshFunction(refresh_callback);

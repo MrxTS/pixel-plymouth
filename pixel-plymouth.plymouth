@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=Pixel Plymouth
+Description=Pixel art character animation boot theme
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/pixel-plymouth
+ScriptFile=/usr/share/plymouth/themes/pixel-plymouth/pixel-plymouth.script
